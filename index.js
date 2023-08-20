@@ -36,7 +36,7 @@ app.get("/fetchAllowance", async (req, res) => {
   try {
     const { tokenOne, address } = req.query;
 
-    const allowanceResponse = await axios.get(`https://api.1inch.io/v5.2/1/approve/allowance?tokenAddress=${tokenOne}&walletAddress=${address}`);
+    const allowanceResponse = await axios.get(`https://api.1inch.io/v5.0/1/approve/allowance?tokenAddress=${tokenOne}&walletAddress=${address}`);
 
     // Send allowance data as response
     res.status(200).json(allowanceResponse.data);
@@ -52,18 +52,18 @@ app.get("/fetchSwap", async (req, res) => {
     const { tokenOne, tokenTwo, tokenOneAmount, address, slippage } = req.query;
 
     // Fetch approval status
-    const allowanceResponse = await axios.get(`https://api.1inch.io/v5.2/1/approve/allowance?tokenAddress=${tokenOne}&walletAddress=${address}`);
+    const allowanceResponse = await axios.get(`https://api.1inch.io/v5.0/1/approve/allowance?tokenAddress=${tokenOne}&walletAddress=${address}`);
     
     if (allowanceResponse.data.allowance === "0") {
       // Fetch approval transaction
-      const approveResponse = await axios.get(`https://api.1inch.io/v5.2/1/approve/transaction?tokenAddress=${tokenOne}`);
+      const approveResponse = await axios.get(`https://api.1inch.io/v5.0/1/approve/transaction?tokenAddress=${tokenOne}`);
 
       // Send approval transaction details as response
       res.status(200).json({ approveTx: approveResponse.data });
     } else {
       // Fetch swap transaction
       const swapResponse = await axios.get(
-        `https://api.1inch.io/v5.2/1/swap?fromTokenAddress=${tokenOne}&toTokenAddress=${tokenTwo}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
+        `https://api.1inch.io/v5.0/1/swap?fromTokenAddress=${tokenOne}&toTokenAddress=${tokenTwo}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
       );
 
       // Send swap transaction details as response
@@ -79,7 +79,7 @@ app.get("/fetchTx", async (req, res) => {
     const { tokenOne, tokenTwo, tokenOneAmount, address, slippage } = req.query;
 
     const txResponse = await axios.get(
-      `https://api.1inch.io/v5.2/1/swap?fromTokenAddress=${tokenOne}&toTokenAddress=${tokenTwo}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
+      `https://api.1inch.io/v5.0/1/swap?fromTokenAddress=${tokenOne}&toTokenAddress=${tokenTwo}&amount=${tokenOneAmount.padEnd(tokenOne.decimals + tokenOneAmount.length, '0')}&fromAddress=${address}&slippage=${slippage}`
     );
 
     // Send tx transaction details as response
